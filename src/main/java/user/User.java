@@ -42,9 +42,9 @@ public class User {
     // Создание пользователя без имени
     public static User getRandomUserWithoutName() {
         return new User(
-                "",
+                RandomStringUtils.randomAlphanumeric(10) + "@example.com",
                 "123456",
-                "TestUser_" + RandomStringUtils.randomAlphanumeric(6)
+                ""
         );
     }
 

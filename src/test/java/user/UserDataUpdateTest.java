@@ -20,13 +20,13 @@ public class UserDataUpdateTest {
         // Создание пользователя
         user = User.getRandomUser();
         // Создание учетной записи пользователя
-        userAccessToken = UserSpec.getResponseCreateUser(user,200).accessToken;
+        userAccessToken = new UserSpec().getResponseCreateUser(user,200).accessToken;
     }
 
     // Удаление учетной записи пользователя
     @After
     public void tearDown() throws Exception {
-        UserSpec.getResponseUserDeleted(userAccessToken, 202);
+        new UserSpec().getResponseUserDeleted(userAccessToken, 202);
     }
 
     @Test
@@ -34,14 +34,14 @@ public class UserDataUpdateTest {
     public void changePasswordOfTheAuthorizationUserTestOk() throws JsonProcessingException {
         User createdUser = new User(user.getEmail(), user.getPassword());
         // Авторизация пользователя
-        UserSpec.getResponseUserAuthorization(createdUser, 200);
+        new UserSpec().getResponseUserAuthorization(createdUser, 200);
         // Изменение пароля пользователя
         String updatedPassword = "New" + user.getPassword();
         User updatedUser = new User(user.getEmail(), updatedPassword, user.getName());
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, userAccessToken, 200);
+        new UserSpec().getResponseUpdateUserData(updatedUser, userAccessToken, 200);
         // Авторизация с измененным паролем
-        userAccessToken = UserSpec.getResponseUserAuthorization(updatedUser, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(updatedUser, 200).accessToken;
         assertThat(userAccessToken, notNullValue());
     }
 
@@ -50,12 +50,12 @@ public class UserDataUpdateTest {
     public void successfullChangeNameOfTheAuthorizationUserTestOk() throws JsonProcessingException {
         User createdUser = new User(user.getEmail(), user.getPassword());
         // Авторизация пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(createdUser, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(createdUser, 200).accessToken;
         // Изменение имени пользователя
         String updatedName = "New" + user.getName();
         User updatedUser = new User(user.getEmail(), user.getPassword(), updatedName);
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, userAccessToken, 200)
+        new UserSpec().getResponseUpdateUserData(updatedUser, userAccessToken, 200)
                 .body("user.name",equalTo(updatedName));
     }
 
@@ -64,12 +64,12 @@ public class UserDataUpdateTest {
     public void successfullChangeEmailOfTheAuthorizationUserTestOk() throws JsonProcessingException {
         User createdUser = new User(user.getEmail(), user.getPassword());
         // Авторизация пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(createdUser, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(createdUser, 200).accessToken;
         // Изменение email пользователя
         String updatedEmail = "New" + user.getEmail();
         User updatedUser = new User(updatedEmail, user.getPassword(), user.getName());
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, userAccessToken, 200)
+        new UserSpec().getResponseUpdateUserData(updatedUser, userAccessToken, 200)
                 .body("user.email",equalTo(updatedEmail.toLowerCase()));
     }
 
@@ -80,7 +80,7 @@ public class UserDataUpdateTest {
         String updatedPassword = "New" + user.getPassword();
         User updatedUser = new User(user.getEmail(), updatedPassword, user.getName());
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, "", 401)
+        new UserSpec().getResponseUpdateUserData(updatedUser, "", 401)
                 .body("message",equalTo("You should be authorised"));
     }
 
@@ -91,7 +91,7 @@ public class UserDataUpdateTest {
         String updatedName = "New" + user.getName();
         User updatedUser = new User(user.getEmail(), user.getPassword(), updatedName);
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, "", 401)
+        new UserSpec().getResponseUpdateUserData(updatedUser, "", 401)
                 .body("message",equalTo("You should be authorised"));
     }
 
@@ -102,7 +102,7 @@ public class UserDataUpdateTest {
         String updatedEmail = "New" + user.getEmail();
         User updatedUser = new User(updatedEmail, user.getPassword(), user.getName());
         // Изменение данных пользователя
-        UserSpec.getResponseUpdateUserData(updatedUser, "", 401)
+        new UserSpec().getResponseUpdateUserData(updatedUser, "", 401)
                 .body("message",equalTo("You should be authorised"));
     }
 }

@@ -24,27 +24,27 @@ public class OrderListTest {
         // Создание пользователя
         user = User.getRandomUser();
 
-        userAccessToken = UserSpec.getResponseCreateUser(user,200).accessToken;
+        userAccessToken = new UserSpec().getResponseCreateUser(user,200).accessToken;
         // Количество заказов пользователя
         numberOfOrders = 4;
         // Создание списка заказов пользователя
-        OrderSpec.createListOfOrders(user, numberOfOrders);
+        new OrderSpec().createListOfOrders(user, numberOfOrders);
     }
 
     // Удаление учетной записи пользователя
     @After
     public void tearDown() throws Exception {
-        UserSpec.getResponseUserDeleted(userAccessToken, 202);
+        new UserSpec().getResponseUserDeleted(userAccessToken, 202);
     }
 
     @Test
     @DisplayName("Тест успешного получения списка заказов авторизованного пользователя")
     public void successfulGetOfOrdersListFromAuthorizedUserTestOk() throws JsonProcessingException {
         // Авторизацию пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(user, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(user, 200).accessToken;
         // Получения списка заказов пользователя
         ArrayList<Integer> orderNumber =
-                new ArrayList<>(OrderSpec.getAnOrderListRequestResponse(userAccessToken, 200)
+                new ArrayList<>(new OrderSpec().getAnOrderListRequestResponse(userAccessToken, 200)
                         .extract()
                         .path("orders.number"));
         assertEquals(numberOfOrders, orderNumber.size());
@@ -54,7 +54,7 @@ public class OrderListTest {
     @DisplayName("Тест неуспешного получения списка заказов неавторизованного пользователя")
     public void failGetOfOrdersListFromUnauthorizedUserTestOk() throws JsonProcessingException {
         // Получения списка заказов пользователя
-        OrderSpec.getAnOrderListRequestResponse("", 401)
+        new OrderSpec().getAnOrderListRequestResponse("", 401)
                 .body("message",equalTo("You should be authorised"));
     }
 }

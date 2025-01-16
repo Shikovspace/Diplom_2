@@ -25,27 +25,27 @@ public class OrderTest {
         // Создание пользователя
         user = User.getRandomUser();
         // Создание учетной записи пользователя
-        userAccessToken = UserSpec.getResponseCreateUser(user,200).accessToken;
+        userAccessToken = new UserSpec().getResponseCreateUser(user,200).accessToken;
         // Создание списка валидных хешей ингредиентов
-        ingredientsHash = OrderSpec.getCreatedListOfValidHashesOfIngredients();
+        ingredientsHash = new OrderSpec().getCreatedListOfValidHashesOfIngredients();
     }
 
     // Удаление учетной записи пользователя
     @After
     public void tearDown() throws Exception {
-        UserSpec.getResponseUserDeleted(userAccessToken, 202);
+        new UserSpec().getResponseUserDeleted(userAccessToken, 202);
     }
 
     @Test
     @DisplayName("Тест успешного создания заказа с авторизацией с двумя ингредиентами")
     public void successfulCreateOrderWithAuthorizationAndTwoIngredientsTestOk() throws JsonProcessingException {
         // Авторизацию пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(user, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(user, 200).accessToken;
         // Массив ингредиентов для заказа
         ingredients = new String[]{ingredientsHash.get(0), ingredientsHash.get(ingredientsHash.size() - 1)};
         Order order = new Order(ingredients);
         // Создание заказа
-        OrderSpec.getResponseCreateOrder(order, userAccessToken, 200)
+        new OrderSpec().getResponseCreateOrder(order, userAccessToken, 200)
                 .assertThat()
                 .body("order.number",notNullValue());
     }
@@ -54,10 +54,10 @@ public class OrderTest {
     @DisplayName("Тест неуспешного создания заказа с авторизацией без ингредиентов")
     public void failCreateOrderWithAuthorizationAndZeroIngredientTestOk() throws JsonProcessingException {
         // Авторизацию пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(user, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(user, 200).accessToken;
         Order order = new Order(ingredients);
         // Создание заказа
-        OrderSpec.getResponseCreateOrder(order, userAccessToken, 400)
+        new OrderSpec().getResponseCreateOrder(order, userAccessToken, 400)
                 .body("message",equalTo("Ingredient ids must be provided"));
     }
 
@@ -69,7 +69,7 @@ public class OrderTest {
         ingredients = new String[]{ingredientsHash.get(0), ingredientsHash.get(ingredientsHash.size() - 1)};
         Order order = new Order(ingredients);
         //создание заказа
-        OrderSpec.getResponseCreateOrder(order, "", 200)
+        new OrderSpec().getResponseCreateOrder(order, "", 200)
                 .body("message",equalTo("Ingredient ids must be provided"));
     }
 
@@ -78,7 +78,7 @@ public class OrderTest {
     public void failCreateOrderWithoutAuthorizationAndZeroIngredientTestOk() throws JsonProcessingException {
         Order order = new Order(ingredients);
         // Создание заказа
-        OrderSpec.getResponseCreateOrder(order, "", 400)
+        new OrderSpec().getResponseCreateOrder(order, "", 400)
                 .body("message",equalTo("Ingredient ids must be provided"));
     }
 
@@ -87,12 +87,12 @@ public class OrderTest {
     @DisplayName("Тест неуспешного создания заказа с авторизацией и неверным хешем ингредиента")
     public void failCreateOrderWithAuthorizationAndIncorrectHashIngredientTestOk() throws JsonProcessingException {
         // Авторизация пользователя
-        userAccessToken = UserSpec.getResponseUserAuthorization(user, 200).accessToken;
+        userAccessToken = new UserSpec().getResponseUserAuthorization(user, 200).accessToken;
         // Невалидный хеш
         ingredients = new String[]{"123456789012345678901234"};
         Order order = new Order(ingredients);
         // Создание заказа
-        OrderSpec.getResponseCreateOrder(order, userAccessToken, 500)
+        new OrderSpec().getResponseCreateOrder(order, userAccessToken, 500)
                 .body("message",equalTo("Internal Server Error"));
     }
 }

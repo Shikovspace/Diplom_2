@@ -19,7 +19,7 @@ public class UserCreateTest {
     @After
     public void tearDown() throws Exception {
         if (userCreateSuccess) {
-            UserSpec.getResponseUserDeleted(userAccessToken, 202);
+            new UserSpec().getResponseUserDeleted(userAccessToken, 202);
         }
     }
 
@@ -29,7 +29,7 @@ public class UserCreateTest {
         // Создание пользователя
         user = User.getRandomUser();
         // Создание учетки пользователя
-        UserSpec response = UserSpec.getResponseCreateUser(user,200);
+        UserSpec response = new UserSpec().getResponseCreateUser(user,200);
         userAccessToken = response.accessToken;
         userCreateSuccess = response.success;
         assertThat(userAccessToken, notNullValue());
@@ -42,7 +42,7 @@ public class UserCreateTest {
         // Создание пользователя без пароля
         user = User.getRandomUserWithoutPassword();
         // Создание учетки пользователя
-        UserSpec response = UserSpec.getResponseCreateUser(user, 403);
+        UserSpec response = new UserSpec().getResponseCreateUser(user, 403);
         assertFalse(response.success);
         assertEquals("Email, password and name are required fields",response.message);
     }
@@ -53,7 +53,7 @@ public class UserCreateTest {
         // Создание пользователя без имени
         user = User.getRandomUserWithoutName();
         // Создание "учетки" пользователя
-        UserSpec response = UserSpec.getResponseCreateUser(user, 403);
+        UserSpec response = new UserSpec().getResponseCreateUser(user, 403);
         assertFalse(response.success);
         assertEquals("Email, password and name are required fields",response.message);
     }
@@ -64,7 +64,7 @@ public class UserCreateTest {
         // Создание пользователя без email
         user = User.getRandomUserWithoutEmail();
         // Создание учетки пользователя
-        UserSpec response = UserSpec.getResponseCreateUser(user, 403);
+        UserSpec response = new UserSpec().getResponseCreateUser(user, 403);
         assertFalse(response.success);
         assertEquals("Email, password and name are required fields",response.message);
     }
@@ -76,11 +76,11 @@ public class UserCreateTest {
         // Создание пользователя
         user = User.getRandomUser();
         // Создание учетки пользователя
-        UserSpec initResponse = UserSpec.getResponseCreateUser(user,200);
+        UserSpec initResponse = new UserSpec().getResponseCreateUser(user,200);
         userAccessToken = initResponse.accessToken;
         userCreateSuccess = initResponse.success;
         // Создание учетки пользователя который уже зарегистрирован
-        UserSpec response = UserSpec.getResponseCreateUser(user, 403);
+        UserSpec response = new UserSpec().getResponseCreateUser(user, 403);
         assertFalse(response.success);
         assertEquals("User already exists",response.message);
     }
